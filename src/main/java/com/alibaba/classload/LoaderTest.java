@@ -70,7 +70,7 @@ public class LoaderTest {
         
         //注释下面两行则不报错
         HighRichHandsome man = (HighRichHandsome) c.newInstance();
-        man.say();    
+        man.say();
     }
     
     /**
