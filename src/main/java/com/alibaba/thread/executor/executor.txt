@@ -1,0 +1,22 @@
+1.Executors
+将线程生命周期管理与其他程序分开，主要由以下几种：
+	Executor Interfaces，三种
+		Executor
+		ExecutorService
+		ScheduledExecutorService
+	线程池
+	fork/join框架
+
+
+2.Executor的原理
+把任务的提交和执行解耦。
+流程：把任务拆分为一些小任务，即Runnable，然后在提交给一个Executor执行，Executor.execute(Runnalbe) ，
+最后Executor在执行时使用内部的线程池完成操作
+
+由于Runnable接口中只提供了一个不带返回值run方法，因此当任务需要返回值时，Executor就不能满足需求了，
+于是出现了ExecutorService,这个接口继承了Executor，对提交任务的接口进行了扩展，引入了Callable接口
+
+3.future
+Future就是对于具体的Runnable或者Callable任务的执行结果进行取消、查询是否完成、获取结果。
+必要时可以通过get方法获取执行结果，该方法会阻塞直到任务返回结果。
+参考http://www.cnblogs.com/dolphin0520/p/3949310.html

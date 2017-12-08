@@ -1,0 +1,58 @@
+当一个变量被定义为volatile之后，它就具有两个特性
+1.可见性。
+对一个volatile变量的读，总是能看到（任意线程）对这个volatile变量最后的写入。一个线程修改后其它线程能够理解看到此变化后的结果
+2.原子性
+但volitile不能保证在并发安全，因为一个线程看到值的同时，当它需要对其进行改变时，其他线程可能已经把变量的值改变了
+
+即只保证可见性，不保证原子性。如对任意单个volatile变量的读/写具有原子性，但类似于volatile++这种复合操作不具有原子性。
+详见Count
+
+
+这里介绍下几个特性
+原子性：
+Java内存模型来直接保证的原子性变量操作包括：read、load、assign、use、store和write
+可见性：
+在变量修改后本地内存同步回主内存，在变量读取前从主内存刷新变量值到本地内存，实现可见性。无论是普通变量还是volatile变量都是如此，
+普通变量与volatile变量的区别是，volatile的特殊规则保证了新值能立即同步到主内存，以及每次使用前立即从主内存刷新。
+因此可以说volatile保证了多线程操作时变量的可见性，而普通变量则不能保证这一点。
+当然java中 synchronized和final 也可以做到这一点
+有序性：
+这点很容易理解，由于禁止了指令重排，所以一般都是按顺序执行。
+
+
+2.禁止指令重排优化
+
+what?
+happens before 一般规则
+详见http://blog.csdn.net/ns_code/article/details/17348313
+根据Java内存模型中的规定，可以总结出以下几条happens-before规则8。Happens-before的前后两个操作不会被重排序且后者对前者的内存可见。
+程序次序法则：线程中的每个动作A都happens-before于该线程中的每一个动作B，其中，在程序中，所有的动作B都能出现在A之后。
+监视器锁法则：对一个监视器锁的解锁 happens-before于每一个后续对同一监视器锁的加锁。
+volatile变量法则：对volatile域的写入操作happens-before于每一个后续对同一个域的读写操作。
+线程启动法则：在一个线程里，对Thread.start的调用会happens-before于每个启动线程的动作。
+线程终结法则：线程中的任何动作都happens-before于其他线程检测到这个线程已经终结、或者从Thread.join调用中成功返回，或Thread.isAlive返回false。
+中断法则：一个线程调用另一个线程的interrupt happens-before于被中断的线程发现中断。
+终结法则：一个对象的构造函数的结束happens-before于这个对象finalizer的开始。
+传递性：如果A happens-before于B，且B happens-before于C，则A happens-before于C
+
+可以通过以下工具实现happens before原则
+synchronized volitile final UC包
+
+what？指令重排
+JVM处理器可能会对输入的代码进行优化，并在计算之后将乱序执行的结果重组，保证该结果与 顺序 执行的结果是一致的。
+why？
+使得机器指令更符合CPU的执行特点
+在条件允许的情况下，直接运行当前有能力立即执行的后续指令，避开获取下一条指令所需数据时造成的等待3。
+通过乱序执行的技术，处理器可以大大提高执行效率。cpu访问主存比访问cache慢很多，重排可以提高cpu吞吐量；
+
+http://tech.meituan.com/java-memory-reordering.html
+
+volitile可以在代码中加入 内存屏障(Memory Barrier) 指令来保证处理器不发生乱序执行。
+直接操作主存，不是cpu cache
+
+
+3.java内存模型
+主存，本地内存（working memory）
+http://www.infoq.com/cn/articles/java-memory-model-4
+
+

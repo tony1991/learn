@@ -1,0 +1,26 @@
+1.同步代码块
+锁就是so这个对象，谁拿到这个锁谁就可以运行它所控制的那段代码public void method3(SomeObject so)
+{
+    synchronized(so)
+
+    { 
+       //….. 
+    }
+}
+
+
+当有一个明确的对象作为锁时，就可以像上面这样写程序，但当没有明确的对象作为锁，
+只是想让一段代码同步时，可以创建一个特殊的instance变量（它得是一个对象）来充当锁：
+        private byte[] lock = new byte[0]; // 特殊的instance变量
+        Public void methodA() 
+        {
+           synchronized(lock) { //… }
+
+        }
+        //…..
+
+相关基础的可以看java tutorial
+https://docs.oracle.com/javase/tutorial/essential/concurrency/syncmeth.html
+构造函数加synchronized是没有意义的，因为当class构造的时候只有创建它的线程可以访问，不存在同步的问题。
+
+

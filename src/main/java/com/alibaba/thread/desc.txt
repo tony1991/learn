@@ -1,0 +1,56 @@
+首先说明一点，并发不等于多线程，多线程只是并发的一种解决方法。
+
+1.Thread or Runable?
+Which of these idioms should you use? 
+The first idiom, which employs a Runnable object, is more general, 
+because the Runnable object can subclass a class other than Thread. 
+The second idiom is easier to use in simple applications, 
+but is limited by the fact that your task class must be a descendant of Thread. 
+This lesson focuses on the first approach, 
+
+which separates the Runnable task from the Thread object that executes the task. 
+Not only is this approach more flexible, but it is applicable to the high-level thread management APIs covered later.
+
+关键：runable更加灵活，实现runable接口还可以继承其他类，而继承thread则没法继承其他类了；
+thread 自身都是实现runable接口的
+
+2.daemon
+我们一般说的线程都是前台线程，而在前台线程之外还有一种默默工作的后台线程，就是daemon。关于daemon的使用可以查看示例代码:
+
+
+3.线程的一些动作。
+join wait notify notifyAll
+
+join允许另一个线程等待
+t.join它会导致当前线程暂停执行,直到t的线程终止
+join不会按照你指定的时长等待
+
+4.死锁，饥饿锁，活锁
+死锁：互相获取对方的锁，但是双方都没有释放。A和B都不是讲礼貌的人，都不愿给别人让路，所以A和B都在等对方让路，导致谁也过不去。
+饥饿锁：一个线程由于得不到足够的资源而不能执行程序的现象。别的线程太过贪婪，一直占用，导致其他锁一直的等待，饥饿、、
+活锁：A和B都是很讲礼貌的人，都主动给别人让路。A往左移，同时B往右移；A往右移，同时B往左移。
+
+
+5.synchronized & volitile
+
+高级线程
+Lock objects 锁对象，适用于许多并发程序的锁对象条目
+Executors 提供对于大规模应用程序的线程池管理。
+Concurrent collections 并发集合，使管理并发的数据集更加容易，并且能够有效的减少synchronization的需求。
+Atomic variables 原子性变量，具有最小的同步特性并能有效的避免内存一致性错误。
+ThreadLocalRandom 本地随机线程（JDK 7）对于多线程提供有效的生成伪随机数的方法。
+
+6.java锁机制
+互斥锁
+	同步块synchronized block
+	对象锁object.lock
+	可重入锁ReentrantLock
+		可重入锁：一个线程不能获得另一个线程所拥有的锁，但是可以再次获得自己已经拥有的锁，这个锁就是可重入锁。
+		有一种场景就是同步代码块里面还有换个同步代码块，没有可重入锁，同步代码会需要许多额外的预防措施来避免线程导致本身阻塞
+		java环境下ReentrantLock 和synchronized都是
+		ReentrantLock比synchronized功能更强大
+信号量
+	公平和非公平
+乐观锁CAS（compare and swap）
+	ABA问题，无锁堆栈实现
+	
